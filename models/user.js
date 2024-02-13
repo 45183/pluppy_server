@@ -30,7 +30,8 @@ module.exports = class User extends Sequelize.Model {
                 type: Sequelize.ENUM,
                 values: ["admin", "user"],
                 defaultValue: "user"
-            }
+            }       
+        
         }, {
             sequelize,
             timestamps: true,

@@ -14,6 +14,9 @@ const { sequelize } = require("./models");
 const indexRouter = require("./routes");
 const userRouter = require("./routes/userRoute");
 const authRouter = require("./routes/authRoute");
+const bodyParser = require("body-parser");
+const upload = require('./routes/productRoute');
+const productRouter = require("./routes/productRoute");
 
 dotenv.config();
 passportConfig();
@@ -51,9 +54,12 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/product", productRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);
+  console.error('[response]',response);
+
   res
     .status(500)
     .json(
@@ -64,6 +70,7 @@ app.use((err, req, res, next) => {
       )
     );
 });
+
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중");
