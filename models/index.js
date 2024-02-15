@@ -1,23 +1,27 @@
-const Sequelize = require('sequelize');
-const User = require('./user');
-const Address = require('./address');
-const Category = require('./category');
-const Product = require('./product');
-const Stock = require('./stock');
-const Cart = require('./cart');
-const CartItem = require('./cartItem');
-const WishList = require('./wishList');
-const Review = require('./review');
-const Payment = require('./payment');
-const Order = require('./order');
-const OrderItem = require('./orderItem');
+const Sequelize = require("sequelize");
+const User = require("./user");
+const Address = require("./address");
+const ParentCategory = require("./parentcategory");
+const Category = require("./category");
+const Product = require("./product");
+const Stock = require("./stock");
+const Cart = require("./cart");
+const CartItem = require("./cartItem");
+const WishList = require("./wishList");
+const Review = require("./review");
+const Payment = require("./payment");
+const Order = require("./order");
+const OrderItem = require("./orderItem");
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config')[env];
+const env = process.env.NODE_ENV || "development";
+const config = require("../config/config")[env];
 const db = {};
 
 const sequelize = new Sequelize(
-    config.database, config.username, config.password, config
+	config.database,
+	config.username,
+	config.password,
+	config
 );
 
 db.sequelize = sequelize;
@@ -25,6 +29,7 @@ db.Sequelize = Sequelize;
 
 db.User = User;
 db.Address = Address;
+db.ParentCategory = ParentCategory;
 db.Category = Category;
 db.Product = Product;
 db.Stock = Stock;
@@ -38,7 +43,9 @@ db.OrderItem = OrderItem;
 
 User.init(sequelize);
 Address.init(sequelize);
+
 Category.init(sequelize);
+ParentCategory.init(sequelize);
 Product.init(sequelize);
 Stock.init(sequelize);
 Cart.init(sequelize);
