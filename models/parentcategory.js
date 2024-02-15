@@ -1,10 +1,10 @@
 const Sequelize = require("sequelize");
 
-module.exports = class Category extends Sequelize.Model {
+module.exports = class ParentCategory extends Sequelize.Model {
 	static init(sequelize) {
 		return super.init(
 			{
-				categoryId: {
+				parentCategoryId: {
 					type: Sequelize.INTEGER,
 					allowNull: false,
 					primaryKey: true,
@@ -19,19 +19,12 @@ module.exports = class Category extends Sequelize.Model {
 				sequelize,
 				timestamps: false,
 				underscored: false,
-				modelName: "Category",
-				tableName: "category",
+				modelName: "ParentCategory",
+				tableName: "parentcategory",
 				paranoid: false,
 				charset: "utf8mb4",
 				collate: "utf8mb4_general_ci",
 			}
 		);
-	}
-
-	static associate(db) {
-		db.Category.belongsTo(db.ParentCategory, {
-			foreignKey: "parentCategoryId",
-			targetKey: "parentCategoryId",
-		});
 	}
 };
