@@ -14,12 +14,11 @@ class ProductService {
 		parentCategoryName,
 		categoryName
 	) => {
-		console.log(parentCategoryName, categoryName);
-		const parentCategoryId = await this.productRepository.getParentCategoryId(
+		const parentCategoryId = await this.productRepository.getParentCategory(
 			parentCategoryName
 		);
 
-		const categoryId = await this.productRepository.getCategoryId(categoryName);
+		const categoryId = await this.productRepository.getCategory(categoryName);
 
 		const newProduct = await this.productRepository.createProduct(
 			name,
@@ -61,7 +60,7 @@ class ProductService {
 			};
 		}
 		////Type이 있으면
-		const categoryId = await this.productRepository.getCategoryId(type);
+		const categoryId = await this.productRepository.getCategory(type);
 		const productsOfDog = await this.productRepository.getProductsOfDog(
 			categoryId
 		);
@@ -84,7 +83,7 @@ class ProductService {
 			};
 		}
 		////Type이 있으면
-		const categoryId = await this.productRepository.getCategoryId(type);
+		const categoryId = await this.productRepository.getCategory(type);
 		const productsOfCat = await this.productRepository.getProductsOfCat(
 			categoryId
 		);

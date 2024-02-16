@@ -7,28 +7,30 @@ class productRepository {
 		this.parentCategoryModel = ParentCategoryModel;
 	}
 
-	getCategory = async () => {
+	getCategory = async (categoryName, type) => {
+		if (categoryName || type) {
+			if (type) {
+				return (categoryName = type);
+			}
+			categoryName = await this.categoryModel.findOne({
+				where: { name: categoryName },
+			});
+			return categoryName.toJSON().categoryId;
+		}
 		const category = await this.categoryModel.findAll();
 		return category;
 	};
 
-	getParentCategory = async () => {
-		const parentCategory = await this.parentCategoryModel.findAll();
-		return parentCategory;
-	};
-
-	getParentCategoryId = async (parentCategoryName) => {
+	getParentCategory = async (parentCategoryName) => {
+		if (!parentCategoryName) {
+			const parentCategory = await this.parentCategoryModel.findAll();
+			return parentCategory;
+		}
 		parentCategoryName = await this.parentCategoryModel.findOne({
 			where: { name: parentCategoryName },
 		});
 
 		return parentCategoryName.toJSON().parentCategoryId;
-	};
-	getCategoryId = async (categoryName) => {
-		categoryName = await this.categoryModel.findOne({
-			where: { name: categoryName },
-		});
-		return categoryName.toJSON().categoryId;
 	};
 
 	getProducts = async () => {
@@ -86,7 +88,7 @@ class productRepository {
 			parentCategoryId,
 		});
 
-		console.log("newProduct 생성", newProduct);
+		console.log("newProduct 생성");
 
 		return newProduct;
 	};
