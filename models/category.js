@@ -27,11 +27,4 @@ module.exports = class Category extends Sequelize.Model {
 			}
 		);
 	}
-
-	static associate(db) {
-		db.Category.belongsTo(db.ParentCategory, {
-			foreignKey: "parentCategoryId",
-			targetKey: "parentCategoryId",
-		});
-	}
 };

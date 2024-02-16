@@ -65,5 +65,9 @@ module.exports = class Product extends Sequelize.Model {
 			foreignKey: "categoryId",
 			targetKey: "categoryId",
 		});
+		db.Product.belongsTo(db.ParentCategory, {
+			foreignKey: "parentCategoryId",
+			targetKey: "parentCategoryId",
+		});
 	}
 };

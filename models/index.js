@@ -57,8 +57,6 @@ Order.init(sequelize);
 OrderItem.init(sequelize);
 
 Address.associate(db);
-Category.associate(db);
-// ParentCategory.associate(db);
 Product.associate(db);
 Stock.associate(db);
 Cart.associate(db);

@@ -7,35 +7,88 @@ class productRepository {
 		this.parentCategoryModel = ParentCategoryModel;
 	}
 
-	getParentCategoryId = async (mainCategory) => {
-		mainCategory = await this.parentCategoryModel.findOne({
-			where: { name: mainCategory },
-		});
-
-		console.log("[1차 카테고리]", mainCategory.toJSON().parentCategoryId);
-		return mainCategory.toJSON().parentCategoryId;
-	};
-	getCategoryId = async (parentCategoryId, subCategory) => {
-		const category = await this.categoryModel.findOne({
-			where: { name: subCategory, parentCategoryId: parentCategoryId },
-		});
-		console.log("[상품 카테고리 결과]", category.toJSON().categoryId);
-		return category.toJSON().categoryId;
+	getCategory = async () => {
+		const category = await this.categoryModel.findAll();
+		return category;
 	};
 
-	createProduct = async (name, price, description, image1, categoryId) => {
+	getParentCategory = async () => {
+		const parentCategory = await this.parentCategoryModel.findAll();
+		return parentCategory;
+	};
+
+	getParentCategoryId = async (parentCategoryName) => {
+		parentCategoryName = await this.parentCategoryModel.findOne({
+			where: { name: parentCategoryName },
+		});
+
+		return parentCategoryName.toJSON().parentCategoryId;
+	};
+	getCategoryId = async (categoryName) => {
+		categoryName = await this.categoryModel.findOne({
+			where: { name: categoryName },
+		});
+		return categoryName.toJSON().categoryId;
+	};
+
+	getProducts = async () => {
+		const products = await this.productModel.findAll();
+		return products;
+	};
+
+	getItem = async (productId) => {
+		productId = await this.productModel.findOne({
+			where: { productId: productId },
+		});
+		return productId;
+	};
+
+	getProductsOfDog = async (categoryId) => {
+		if (!categoryId) {
+			const productsOfDog = await this.productModel.findAll({
+				where: { parentCategoryId: 2 },
+			});
+			return productsOfDog;
+		}
+		const productsOfDog = await this.productModel.findAll({
+			where: { parentCategoryId: 2, categoryId: categoryId },
+		});
+		return productsOfDog;
+	};
+
+	getProductsOfCat = async (categoryId) => {
+		if (!categoryId) {
+			const productsOfCat = await this.productModel.findAll({
+				where: { parentCategoryId: 3 },
+			});
+			return productsOfCat;
+		}
+		const productsOfCat = await this.productModel.findAll({
+			where: { parentCategoryId: 3, categoryId: categoryId },
+		});
+		return productsOfCat;
+	};
+
+	createProduct = async (
+		name,
+		price,
+		description,
+		image1,
+		categoryId,
+		parentCategoryId
+	) => {
 		const newProduct = await this.productModel.create({
 			name,
 			price,
 			description,
 			image1,
 			categoryId,
+			parentCategoryId,
 		});
 
-		console.log("newProduct 생성");
+		console.log("newProduct 생성", newProduct);
 
 		return newProduct;
 	};
 }
-
 module.exports = productRepository;
