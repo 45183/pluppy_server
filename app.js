@@ -16,7 +16,7 @@ const userRouter = require("./routes/userRoute");
 const authRouter = require("./routes/authRoute");
 const bodyParser = require("body-parser");
 const productRouter = require("./routes/productRoute");
-
+const Category = require("./models/category");
 dotenv.config();
 passportConfig();
 
@@ -31,20 +31,26 @@ sequelize
 		console.log("데이터베이스 연결 성공");
 		const seederFolder = path.join(__dirname, "seeders");
 		// seeder 폴더 탐색
-		fs.readdirSync(seederFolder).forEach((file) => {
+		fs.readdirSync(seederFolder).forEach(async (file) => {
 			// 시드(seed) 파일 실행
 			const seedFile = require(path.join(seederFolder, file));
-			seedFile
-				.up(sequelize.getQueryInterface(), sequelize.constructor)
-				.then(() =>
-					console.log(`${file} 시드(seed) 파일이 성공적으로 실행되었습니다.`)
-				)
-				.catch((err) =>
-					console.error(
-						`${file} 시드(seed) 파일 실행 중 오류가 발생했습니다:`,
-						err
+			const isSeeded = await Category.findOne({
+				where: { categoryId: 1 },
+			});
+
+			if (!isSeeded) {
+				seedFile
+					.up(sequelize.getQueryInterface(), sequelize.constructor)
+					.then(() =>
+						console.log(`${file} 시드(seed) 파일이 성공적으로 실행되었습니다.`)
 					)
-				);
+					.catch((err) =>
+						console.error(
+							`${file} 시드(seed) 파일 실행 중 오류가 발생했습니다:`,
+							err
+						)
+					);
+			}
 		});
 	})
 	.catch((err) => console.error(err));
