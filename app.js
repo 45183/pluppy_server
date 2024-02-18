@@ -16,6 +16,7 @@ const userRouter = require("./routes/userRoute");
 const authRouter = require("./routes/authRoute");
 const bodyParser = require("body-parser");
 const productRouter = require("./routes/productRoute");
+const cartRouter = require("./routes/cartRoute");
 const Category = require("./models/category");
 dotenv.config();
 passportConfig();
@@ -84,6 +85,8 @@ app.use("/", indexRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/product", productRouter);
+
+app.use("/cart", cartRouter);
 
 app.use((err, req, res, next) => {
 	console.error(err);
