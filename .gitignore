@@ -4,4 +4,8 @@
 
 .gitmessage.txt
 
+.eslintrc.json
+
+.prettierrc
+
 /config
