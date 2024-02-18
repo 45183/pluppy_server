@@ -17,7 +17,7 @@ const authRouter = require('./routes/authRoute');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
 const wishListRouter = require('./routes/wishListRoute');
-const Category = require('./models/category');
+const User = require('./models/user');
 
 const response = require('./data/responseFrom');
 const resTEXT = require('./data/responseString');
@@ -43,9 +43,9 @@ sequelize
     // seeder 폴더 탐색
     fs.readdirSync(seederFolder).forEach(async (file) => {
       // 시드(seed) 파일 실행
-      const seedFile = path.join(seederFolder, file);
-      const isSeeded = await Category.findOne({
-        where: { categoryId: 1 },
+      const seedFile = require(path.join(seederFolder, file));
+      const isSeeded = await User.findOne({
+        where: { userId: 1 },
       });
 
       if (!isSeeded) {
