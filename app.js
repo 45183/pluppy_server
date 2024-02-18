@@ -30,8 +30,8 @@ app.set('port', process.env.PORT || 3000);
 app.use(
   cors({
     origin: 'http://localhost:3000',
-    credentials: true
-  })
+    credentials: true,
+  }),
 );
 app.use(express.json());
 
@@ -45,15 +45,20 @@ sequelize
       // 시드(seed) 파일 실행
       const seedFile = path.join(seederFolder, file);
       const isSeeded = await Category.findOne({
-        where: { categoryId: 1 }
+        where: { categoryId: 1 },
       });
 
       if (!isSeeded) {
         seedFile
           .up(sequelize.getQueryInterface(), sequelize.constructor)
-          .then(() => console.log(`${file} 시드(seed) 파일이 성공적으로 실행되었습니다.`))
+          .then(() =>
+            console.log(`${file} 시드(seed) 파일이 성공적으로 실행되었습니다.`),
+          )
           .catch((err) =>
-            console.error(`${file} 시드(seed) 파일 실행 중 오류가 발생했습니다:`, err)
+            console.error(
+              `${file} 시드(seed) 파일 실행 중 오류가 발생했습니다:`,
+              err,
+            ),
           );
       }
     });
@@ -71,10 +76,10 @@ app.use(
     secret: process.env.SECRET,
     cookie: {
       httpOnly: true,
-      secure: false
+      secure: false,
     },
-    name: 'session-cookie'
-  })
+    name: 'session-cookie',
+  }),
 );
 
 app.use(passport.initialize());
@@ -98,8 +103,8 @@ app.use((err, req, res, next) => {
       response.responseFromData(
         resTEXT.RESPONSE_TEXT.FAIL,
         resTEXT.RESPONSE_TEXT.PERMISSION_DENIED,
-        err
-      )
+        err,
+      ),
     );
 });
 
