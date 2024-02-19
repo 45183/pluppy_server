@@ -1,46 +1,54 @@
-const userRepository = require("../repository/userRepository");
-const cartRepository = require("../repository/cartRpository");
-const CartItem = require("../models/cartItem");
+const cartRepository = require('../repository/cartRpository');
+const { CART_CONSOLE } = require('../data/responseString');
 
 exports.getItems = async (userId) => {
-	const cartId = await cartRepository.getCartId(userId);
-	const items = await cartRepository.getItems(cartId);
+  try {
+    const cartId = await cartRepository.getCartId(userId);
 
-	return items;
+    const items = await cartRepository.getItems(cartId);
+
+    CART_CONSOLE.SERVICE('getItems');
+    return items;
+  } catch (err) {
+    CART_CONSOLE.SERVICE('getItems', err);
+  }
 };
 
 exports.addItem = async (amount, userId, productId) => {
-	try {
-		const cartId = await cartRepository.getCartId(userId);
+  try {
+    const cartId = await cartRepository.getCartId(userId);
 
-		//item이 cart에 있는지 조회
-		const cartItemId = await cartRepository.checkItemsOfUser(cartId, productId);
+    const cartItemId = await cartRepository.checkItemsOfUser(cartId, productId);
 
-		// cartItem에 추가
-		const item = await cartRepository.addItem(
-			cartItemId,
-			amount,
-			userId,
-			productId,
-			cartId
-		);
+    const item = await cartRepository.addItem(cartItemId, amount, userId, productId, cartId);
+    CART_CONSOLE.SERVICE('addItem');
 
-		return item;
-	} catch (err) {
-		console.log("cart 서비스 addItem 에러");
-	}
+    return item;
+  } catch (err) {
+    CART_CONSOLE.SERVICE('addItem', err);
+  }
 };
 
 exports.setAmount = async (cartItemId, amount) => {
-	const item = await cartRepository.setAmount(cartItemId, amount);
+  try {
+    const item = await cartRepository.setAmount(cartItemId, amount);
+    CART_CONSOLE.SERVICE('setAmount');
 
-	return item;
+    return item;
+  } catch (err) {
+    CART_CONSOLE.SERVICE('setAmount', err);
+  }
 };
 
-exports.deleteItems = async (items) => {
-	await Promise.all(
-		items.map(async (item) => {
-			await cartRepository.deleteItems(item);
-		})
-	);
+exports.deleteItems = async (cartItemIdList) => {
+  try {
+    await Promise.all(
+      cartItemIdList.map(async (cartItemId) => {
+        await cartRepository.deleteItems(cartItemId);
+      }),
+    );
+    CART_CONSOLE.SERVICE('deleteItems');
+  } catch (err) {
+    CART_CONSOLE.SERVICE('deleteItems', err);
+  }
 };

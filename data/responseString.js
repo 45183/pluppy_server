@@ -2,6 +2,7 @@ exports.RESPONSE_TEXT = {
   SUCCESS: 'success',
   FAIL: 'fail',
   PERMISSION_DENIED: '잘못된 접근이 확인되었습니다.',
+  MISSING: '요청 데이터가 누락되었습니다.',
 };
 
 exports.AUTH_MESSAGE = {
@@ -36,7 +37,7 @@ exports.USER_MESSAGE = {
 exports.CART_MESSAGE = {
   CREATE: '[cart]장바구니 정보 추가 완료',
   DELETE: '[cart]장바구니 정보 삭제 완료',
-  UPDATE: '[cart]장바구니 정보 업데이트 완료',
+  UPDATE: '[cart]장바구니 수량 업데이트 완료',
   GET: '[cart]장바구니 정보 요청 완료',
   ERROR: '[cart]요청 오류 발생',
 };
@@ -49,13 +50,13 @@ exports.ADMIN_MESSAGE = {
   ERROR: '[admin]요청 오류 발생',
 };
 
-exports.WISHLIST_MESSAGE = {
+exports.CART_CONSOLE = {
   log: function (type, func, err) {
     if (err) {
-      console.log(`[wishList]-[${type}]-[${func}] 실패`, err);
+      console.log(`[cart]-[${type}]-[${func}] 실패`);
       throw err;
     }
-    console.log(`[wishList]-[${type}]-[${func}] 성공`);
+    console.log(`[cart]-[${type}]-[${func}] 성공`);
   },
   CONTROLLER: function (func, err) {
     this.log('Controller', func, err);

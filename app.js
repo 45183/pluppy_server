@@ -14,14 +14,10 @@ const { sequelize } = require('./models');
 const indexRouter = require('./routes');
 const userRouter = require('./routes/userRoute');
 const authRouter = require('./routes/authRoute');
+const bodyParser = require('body-parser');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
-const wishListRouter = require('./routes/wishListRoute');
-const User = require('./models/user');
-
-const response = require('./data/responseFrom');
-const resTEXT = require('./data/responseString');
-
+const Category = require('./models/category');
 dotenv.config();
 passportConfig();
 
@@ -51,14 +47,9 @@ sequelize
       if (!isSeeded) {
         seedFile
           .up(sequelize.getQueryInterface(), sequelize.constructor)
-          .then(() =>
-            console.log(`${file} 시드(seed) 파일이 성공적으로 실행되었습니다.`),
-          )
+          .then(() => console.log(`${file} 시드(seed) 파일이 성공적으로 실행되었습니다.`))
           .catch((err) =>
-            console.error(
-              `${file} 시드(seed) 파일 실행 중 오류가 발생했습니다:`,
-              err,
-            ),
+            console.error(`${file} 시드(seed) 파일 실행 중 오류가 발생했습니다:`, err),
           );
       }
     });
@@ -89,13 +80,12 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/product', productRouter);
-app.use('/wishList', wishListRouter);
 
 app.use('/cart', cartRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);
-  console.error('[response]', res);
+  console.error('[response]', response);
 
   res
     .status(500)
