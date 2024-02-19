@@ -14,10 +14,10 @@ const { sequelize } = require('./models');
 const indexRouter = require('./routes');
 const userRouter = require('./routes/userRoute');
 const authRouter = require('./routes/authRoute');
-const bodyParser = require('body-parser');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
-const Category = require('./models/category');
+const wishLsitRouter = require('./routes/wishListRoute');
+const User = require('./models/user');
 dotenv.config();
 passportConfig();
 
@@ -80,6 +80,7 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/product', productRouter);
+app.use('/wishList', wishLsitRouter);
 
 app.use('/cart', cartRouter);
 

@@ -1,6 +1,6 @@
 const wishListService = require('../service/wishListService');
-
-const { WISHLIST_MESSAGE } = require('../data/responseString');
+const { responseFromMessage, responseFromData } = require('../data/responseFrom');
+const { RESPONSE_TEXT, WISHLIST_MESSAGE, WISHLIST_CONSOLE } = require('../data/responseString');
 
 exports.getItems = async (req, res) => {
   try {
@@ -8,14 +8,19 @@ exports.getItems = async (req, res) => {
     const { userId } = req.body;
 
     const items = await wishListService.getItems(userId);
-    WISHLIST_MESSAGE.CONTROLLER('getItems');
 
-    return res.status(200).json({
-      message: '찜 아이템 가져오기 성공 ',
-      items,
-    });
+    if (!items) {
+      return res.status(200).json(responseFromMessage(RESPONSE_TEXT.SUCCESS, RESPONSE_TEXT.ZERO));
+    }
+
+    WISHLIST_CONSOLE.CONTROLLER('getItems');
+
+    return res
+      .status(200)
+      .json(responseFromData(RESPONSE_TEXT.SUCCESS, WISHLIST_MESSAGE.GET, items));
   } catch (err) {
-    WISHLIST_MESSAGE.CONTROLLER('getItems', err);
+    WISHLIST_CONSOLE.CONTROLLER('getItems', err);
+    return res.status(500).json(responseFromMessage(RESPONSE_TEXT.FAIL, WISHLIST_MESSAGE.ERROR));
   }
 };
 
@@ -25,36 +30,35 @@ exports.addItem = async (req, res) => {
     const { userId, productId } = req.body;
 
     if (!productId) {
-      const err = ': productId 미입력';
-      WISHLIST_MESSAGE.CONTROLLER('addItem', err);
-      return res.status(400).json({
-        message: 'productId 미입력',
-      });
+      WISHLIST_MESSAGE.CONTROLLER('addItem', ': productId 미입력');
+      return res.status(400).json(responseFromMessage(RESPONSE_TEXT.FAIL, RESPONSE_TEXT.MISSING));
     }
 
     const item = await wishListService.addItem(userId, productId);
-    WISHLIST_MESSAGE.CONTROLLER('addItem');
+    WISHLIST_CONSOLE.CONTROLLER('addItem');
 
-    return res.status(201).json({
-      message: '찜에 아이템 추가 성공',
-      item,
-    });
+    return res
+      .status(201)
+      .json(responseFromData(RESPONSE_TEXT.SUCCESS, WISHLIST_MESSAGE.CREATE, item));
   } catch (err) {
-    WISHLIST_MESSAGE.CONTROLLER('addItem', err);
+    WISHLIST_CONSOLE.CONTROLLER('addItem', err);
+    return res.status(500).json(responseFromMessage(RESPONSE_TEXT.FAIL, WISHLIST_MESSAGE.ERROR));
   }
 };
 
 exports.deleteItems = async (req, res) => {
   try {
     const { wishListIdList } = req.body;
+
     await wishListService.deleteItems(JSON.parse(wishListIdList));
-    WISHLIST_MESSAGE.CONTROLLER('deleteItems');
-    return res.status(200).json({
-      message: '찜 아이템 삭제 성공',
-    });
+    WISHLIST_CONSOLE.CONTROLLER('deleteItems');
+
+    return res
+      .status(200)
+      .json(responseFromMessage(RESPONSE_TEXT.SUCCESS, WISHLIST_MESSAGE.DELETE));
   } catch (err) {
-    WISHLIST_MESSAGE.CONTROLLER('deleteItems', err);
-    return res.status(500).json({ error: '서버 에러' });
+    WISHLIST_CONSOLE.CONTROLLER('deleteItems', err);
+    return res.status(500).json(responseFromMessage(RESPONSE_TEXT.FAIL, WISHLIST_MESSAGE.ERROR));
   }
 };
 
@@ -64,13 +68,11 @@ exports.moveToCart = async (req, res) => {
     const { userId, wishListIdArray } = req.body;
 
     await wishListService.moveToCart(userId, JSON.parse(wishListIdArray));
+    WISHLIST_CONSOLE.CONTROLLER('moveToCart');
 
-    WISHLIST_MESSAGE.CONTROLLER('moveToCart');
-    return res.status(200).json({
-      message: '선택된 상품 장바구니 이동 성공',
-    });
+    return res.status(200).json(responseFromMessage(RESPONSE_TEXT.SUCCESS, WISHLIST_MESSAGE.MOVE));
   } catch (err) {
-    WISHLIST_MESSAGE.CONTROLLER('moveToCart', err);
-    return res.status(500).json({ error: '서버 에러' });
+    WISHLIST_CONSOLE.CONTROLLER('moveToCart', err);
+    return res.status(500).json(responseFromMessage(RESPONSE_TEXT.FAIL, WISHLIST_MESSAGE.ERROR));
   }
 };

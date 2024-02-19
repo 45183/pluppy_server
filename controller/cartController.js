@@ -11,6 +11,10 @@ exports.getItems = async (req, res, next) => {
     const { userId } = req.body;
 
     const items = await cartService.getItems(userId);
+
+    if (!items) {
+      return res.status(200).json(responseFromMessage(RESPONSE_TEXT.SUCCESS, RESPONSE_TEXT.ZERO));
+    }
     CART_CONSOLE.CONTROLLER('getItems');
 
     return res.status(200).json(responseFromData(RESPONSE_TEXT.SUCCESS, CART_MESSAGE.GET, items));

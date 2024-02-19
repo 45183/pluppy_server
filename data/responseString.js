@@ -3,6 +3,7 @@ exports.RESPONSE_TEXT = {
   FAIL: 'fail',
   PERMISSION_DENIED: '잘못된 접근이 확인되었습니다.',
   MISSING: '요청 데이터가 누락되었습니다.',
+  ZERO: '조회 결과, 데이터가 존재하지 않습니다',
 };
 
 exports.AUTH_MESSAGE = {
@@ -42,6 +43,13 @@ exports.CART_MESSAGE = {
   ERROR: '[cart]요청 오류 발생',
 };
 
+exports.WISHLIST_MESSAGE = {
+  CREATE: '[wishList]찜 정보 추가 완료',
+  DELETE: '[wishList]찜 정보 삭제 완료',
+  MOVE: '[wishList]찜 정보 장바구니로 이동 완료',
+  GET: '[wishList]찜 정보 요청 완료',
+  ERROR: '[wishList]요청 오류 발생',
+};
 exports.ADMIN_MESSAGE = {
   CREATE: '[admin]장바구니 정보 추가 완료',
   DELETE: '[admin]장바구니 정보 삭제 완료',
@@ -57,6 +65,25 @@ exports.CART_CONSOLE = {
       throw err;
     }
     console.log(`[cart]-[${type}]-[${func}] 성공`);
+  },
+  CONTROLLER: function (func, err) {
+    this.log('Controller', func, err);
+  },
+  SERVICE: function (func, err) {
+    this.log('Service', func, err);
+  },
+  REPOSITORY: function (func, err) {
+    this.log('Repository', func, err);
+  },
+};
+
+exports.WISHLIST_CONSOLE = {
+  log: function (type, func, err) {
+    if (err) {
+      console.log(`[wishList]-[${type}]-[${func}] 실패`);
+      throw err;
+    }
+    console.log(`[wishList]-[${type}]-[${func}] 성공`);
   },
   CONTROLLER: function (func, err) {
     this.log('Controller', func, err);

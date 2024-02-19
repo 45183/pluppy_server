@@ -1,15 +1,15 @@
 const wishListRepository = require('../repository/wishListRepository');
 const cartRepository = require('../repository/cartRpository');
-const { WISHLIST_MESSAGE } = require('../data/responseString');
+const { WISHLIST_CONSOLE } = require('../data/responseString');
 
 exports.getItems = async (userId) => {
   try {
     const items = await wishListRepository.getItems(userId);
 
-    WISHLIST_MESSAGE.SERVICE('getItems');
+    WISHLIST_CONSOLE.SERVICE('getItems');
     return items;
   } catch (err) {
-    WISHLIST_MESSAGE.SERVICE('getItems', err);
+    WISHLIST_CONSOLE.SERVICE('getItems', err);
   }
 };
 
@@ -17,10 +17,10 @@ exports.addItem = async (userId, productId) => {
   try {
     const item = await wishListRepository.addItem(userId, productId);
 
-    WISHLIST_MESSAGE.SERVICE('addItem');
+    WISHLIST_CONSOLE.SERVICE('addItem');
     return item;
   } catch (err) {
-    WISHLIST_MESSAGE.SERVICE('addItem', err);
+    WISHLIST_CONSOLE.SERVICE('addItem', err);
   }
 };
 
@@ -32,9 +32,9 @@ exports.deleteItems = async (wishListIdList) => {
       }),
     );
 
-    WISHLIST_MESSAGE.SERVICE('deleteItems');
+    WISHLIST_CONSOLE.SERVICE('deleteItems');
   } catch (err) {
-    WISHLIST_MESSAGE.SERVICE('deleteItems', err);
+    WISHLIST_CONSOLE.SERVICE('deleteItems', err);
   }
 };
 
@@ -52,10 +52,7 @@ exports.moveToCart = async (userId, wishListIdArray) => {
 
     await Promise.all(
       productIdList.map(async (productId) => {
-        const cartItemId = await cartRepository.checkItemsOfUser(
-          cartId,
-          productId,
-        );
+        const cartItemId = await cartRepository.checkItemsOfUser(cartId, productId);
         // 이미 cart에 존재하는 상품이라면
         if (cartItemId) {
           await cartRepository.addItem(cartItemId, amount);
@@ -69,9 +66,9 @@ exports.moveToCart = async (userId, wishListIdArray) => {
     // wishList에서 이동된 상품 삭제
     await exports.deleteItems(wishListIdArray);
 
-    WISHLIST_MESSAGE.SERVICE('moveToCart');
+    WISHLIST_CONSOLE.SERVICE('moveToCart');
     return productIdList;
   } catch (err) {
-    WISHLIST_MESSAGE.SERVICE('moveToCart', err);
+    WISHLIST_CONSOLE.SERVICE('moveToCart', err);
   }
 };

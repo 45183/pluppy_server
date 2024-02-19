@@ -1,6 +1,6 @@
 const WishList = require('../models/wishList');
 
-const { WISHLIST_MESSAGE } = require('../data/responseString');
+const { WISHLIST_CONSOLE } = require('../data/responseString');
 const Product = require('../models/product');
 
 exports.getProductId = async (wishListId) => {
@@ -11,10 +11,10 @@ exports.getProductId = async (wishListId) => {
     });
 
     // console.log(productId);
-    WISHLIST_MESSAGE.REPOSITORY('getProductId');
+    WISHLIST_CONSOLE.REPOSITORY('getProductId');
     return productId.toJSON().productId;
   } catch (err) {
-    WISHLIST_MESSAGE.REPOSITORY('getProductId', err);
+    WISHLIST_CONSOLE.REPOSITORY('getProductId', err);
   }
 };
 
@@ -24,10 +24,10 @@ exports.getItems = async (userId) => {
       where: { userId: userId },
       include: { model: Product },
     });
-    WISHLIST_MESSAGE.REPOSITORY('getItems');
+    WISHLIST_CONSOLE.REPOSITORY('getItems');
     return items;
   } catch (err) {
-    WISHLIST_MESSAGE.REPOSITORY('getItems', err);
+    WISHLIST_CONSOLE.REPOSITORY('getItems', err);
   }
 };
 
@@ -35,10 +35,10 @@ exports.addItem = async (userId, productId) => {
   try {
     const item = await WishList.create({ userId, productId });
 
-    WISHLIST_MESSAGE.REPOSITORY('addItem');
+    WISHLIST_CONSOLE.REPOSITORY('addItem');
     return item;
   } catch (err) {
-    WISHLIST_MESSAGE.REPOSITORY('addItem', err);
+    WISHLIST_CONSOLE.REPOSITORY('addItem', err);
   }
 };
 
@@ -46,8 +46,8 @@ exports.deleteItems = async (wishListId) => {
   try {
     await WishList.destroy({ where: { wishListId: wishListId } });
 
-    WISHLIST_MESSAGE.REPOSITORY('deleteItems');
+    WISHLIST_CONSOLE.REPOSITORY('deleteItems');
   } catch (err) {
-    WISHLIST_MESSAGE.REPOSITORY('deleteItems', err);
+    WISHLIST_CONSOLE.REPOSITORY('deleteItems', err);
   }
 };
