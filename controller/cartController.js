@@ -1,64 +1,72 @@
-const response = require("../data/responseFrom");
-const resTEXT = require("../data/responseString");
-const cartService = require("../service/cartService");
+const cartService = require('../service/cartService');
+const { responseFromMessage, responseFromData } = require('../data/responseFrom');
+
+const { RESPONSE_TEXT, CART_MESSAGE } = require('../data/responseString');
+
+const { CART_CONSOLE } = require('../data/responseString');
+
 exports.getItems = async (req, res, next) => {
-	try {
-		console.log("[카트 컨트롤러]", req.session.passport.user);
-		const userId = req.session.passport.user;
-		console.log(userId);
-		await cartService
-			.getItems(userId)
-			.then((items) =>
-				res.status(200).json({ message: "카트 아이템 불러오기", items })
-			)
-			.catch((err) => next(err));
-	} catch (err) {
-		console.log("cart 컨트롤러 getItemsOfUser 에러");
-	}
+  try {
+    // const userId = req.session.passport.user;
+    const { userId } = req.body;
+
+    const items = await cartService.getItems(userId);
+    CART_CONSOLE.CONTROLLER('getItems');
+
+    return res.status(200).json(responseFromData(RESPONSE_TEXT.SUCCESS, CART_MESSAGE.GET, items));
+  } catch (err) {
+    CART_CONSOLE.CONTROLLER('getItems', err);
+  }
 };
 
 exports.addItem = async (req, res, next) => {
-	try {
-		// const userId = req.session.passport.user;
-		const { amount, userId, productId } = req.body;
-		console.log(amount, userId, productId);
-		await cartService
-			.addItem(amount, userId, productId)
-			.then((item) =>
-				res.status(200).json({ message: "아이템 카트에 등록하기", item })
-			)
-			.catch((err) => next(err));
-	} catch (err) {
-		console.log("cart 컨트롤러 addItem 에러");
-	}
+  try {
+    // const userId = req.session.passport.user;
+    const { amount, userId, productId } = req.body;
+
+    if (!amount || !productId) {
+      return res.status(400).json(responseFromMessage(RESPONSE_TEXT.FAIL, RESPONSE_TEXT.MISSING));
+    }
+    const item = await cartService.addItem(amount, userId, productId);
+    CART_CONSOLE.CONTROLLER('addItem');
+
+    return res.status(200).json(responseFromData(RESPONSE_TEXT.SUCCESS, CART_MESSAGE.CREATE, item));
+  } catch (err) {
+    CART_CONSOLE.CONTROLLER('addItem', err);
+  }
 };
 
 exports.setAmount = async (req, res, next) => {
-	try {
-		// const userId = req.session.passport.user;
-		const { cartItemId, amount } = req.body;
-		console.log(cartItemId, amount);
-		await cartService
-			.setAmount(cartItemId, amount)
-			.then(() => res.status(200).json({ message: "수량 변경 완료" }))
-			.catch((err) => next(err));
-	} catch (err) {
-		console.log("cart 컨트롤러 updateItem 에러");
-	}
+  try {
+    const { cartItemId, amount } = req.body;
+
+    if (!cartItemId || !amount) {
+      return res.status(400).json(responseFromMessage(RESPONSE_TEXT.FAIL, RESPONSE_TEXT.MISSING));
+    }
+
+    await cartService.setAmount(cartItemId, amount);
+
+    CART_CONSOLE.CONTROLLER('setAmount');
+    return res.status(200).json(responseFromMessage(RESPONSE_TEXT.SUCCESS, CART_MESSAGE.UPDATE));
+  } catch (err) {
+    CART_CONSOLE.CONTROLLER('setAmount', err);
+  }
 };
 
 exports.deleteItems = async (req, res, next) => {
-	try {
-		const { items } = req.body;
-		console.log("deleteItems에서 배열", items);
+  try {
+    const { cartItemIdList } = req.body;
 
-		await cartService
-			.deleteItems(items)
-			.then((result) =>
-				res.status(200).json({ message: "아이템 삭제하기", result })
-			)
-			.catch((err) => next(err));
-	} catch (err) {
-		console.log("cart 컨트롤러 updateItem 에러");
-	}
+    if (!cartItemIdList) {
+      return res.status(400).json(responseFromMessage(RESPONSE_TEXT.FAIL, RESPONSE_TEXT.MISSING));
+    }
+
+    await cartService.deleteItems(cartItemIdList);
+
+    CART_CONSOLE.CONTROLLER('deleteItems');
+
+    return res.status(200).json(responseFromMessage(RESPONSE_TEXT.SUCCESS, CART_MESSAGE.DELETE));
+  } catch (err) {
+    CART_CONSOLE.CONTROLLER('deleteItems', err);
+  }
 };

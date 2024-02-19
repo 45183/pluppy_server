@@ -1,73 +1,101 @@
-const Cart = require("../models/cart");
-const CartItem = require("../models/cartItem");
-const Product = require("../models/product");
-const Category = require("../models/category");
-const ParentCategory = require("../models/parentcategory");
+const Cart = require('../models/cart');
+const CartItem = require('../models/cartItem');
+const Product = require('../models/product');
+const { CART_CONSOLE } = require('../data/responseString');
 
 exports.getCartId = async (userId) => {
-	const result = await Cart.findOne({ where: { userId: userId } });
-	const cartId = result.toJSON().cartId;
-	return cartId;
-};
+  try {
+    const result = await Cart.findOne({ where: { userId: userId } });
 
-exports.getItems = (cartId) => {
-	const items = CartItem.findAll({
-		where: { cartId: cartId },
-		include: {
-			model: Product,
-			// include: [Category, ParentCategory],
-		},
-	});
+    const cartId = result.toJSON().cartId;
+    CART_CONSOLE.REPOSITORY('getCartId');
 
-	return items;
+    return cartId;
+  } catch (err) {
+    CART_CONSOLE.REPOSITORY('getCartId', err);
+  }
 };
 
 exports.checkItemsOfUser = async (cartId, productId) => {
-	const result = await CartItem.findOne({
-		where: { cartId: cartId, productId: productId },
-	});
+  try {
+    const result = await CartItem.findOne({
+      where: { cartId: cartId, productId: productId },
+    });
 
-	if (result) {
-		const cartItemId = result.toJSON().cartItemId;
-		return cartItemId;
-	}
+    if (result) {
+      const cartItemId = result.toJSON().cartItemId;
+      return cartItemId;
+    }
+    CART_CONSOLE.REPOSITORY('checkItemsOfUser');
 
-	return;
+    return;
+  } catch (err) {
+    CART_CONSOLE.REPOSITORY('checkItemsOfUser', err);
+  }
+};
+
+exports.getItems = async (cartId) => {
+  try {
+    const items = await CartItem.findAll({
+      where: { cartId: cartId },
+      include: {
+        model: Product,
+      },
+    });
+    CART_CONSOLE.REPOSITORY('getItems');
+
+    return items;
+  } catch (err) {
+    CART_CONSOLE.REPOSITORY('getItems', err);
+  }
 };
 
 exports.addItem = async (cartItemId, amount, userId, productId, cartId) => {
-	if (cartItemId) {
-		const item = await CartItem.findByPk(cartItemId);
-		item.amount += amount;
-		await item.save();
-		return item;
-	}
-	const item = CartItem.create({
-		amount,
-		userId,
-		productId,
-		cartId,
-	});
-	console.log("cartRepository의 addItem 함수 결과 성공,");
-	return item;
+  try {
+    if (cartItemId) {
+      const item = await CartItem.findByPk(cartItemId);
+      item.amount += amount;
+      await item.save();
+      return item;
+    }
+
+    const item = CartItem.create({
+      amount,
+      userId,
+      productId,
+      cartId,
+    });
+    CART_CONSOLE.REPOSITORY('addItem');
+
+    return item;
+  } catch (err) {
+    CART_CONSOLE.REPOSITORY('addItem', err);
+  }
 };
 
 exports.setAmount = async (cartItemId, amount) => {
-	console.log("updateItem에 전달된 ", cartItemId);
-	const result = await CartItem.update(
-		{ amount: amount },
-		{ where: { cartItemId: cartItemId } }
-	);
+  try {
+    const item = await CartItem.update({ amount: amount }, { where: { cartItemId: cartItemId } });
 
-	if (result) {
-		const item = await CartItem.findOne({
-			where: { cartItemId: cartItemId },
-		});
-		console.log("카트 아이템이 성공적으로 업데이트되었습니다.");
-		return item;
-	}
+    if (item) {
+      await CartItem.findOne({
+        where: { cartItemId: cartItemId },
+      });
+      CART_CONSOLE.REPOSITORY('setAmount');
+      return;
+    }
+    return;
+  } catch (err) {
+    CART_CONSOLE.REPOSITORY('setAmount', err);
+  }
 };
 
 exports.deleteItems = async (cartItemId) => {
-	await CartItem.destroy({ where: { cartItemId: cartItemId } });
+  try {
+    await CartItem.destroy({ where: { cartItemId: cartItemId } });
+
+    CART_CONSOLE.REPOSITORY('deleteItems');
+  } catch (err) {
+    CART_CONSOLE.REPOSITORY('deleteItems', err);
+  }
 };
