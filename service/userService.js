@@ -22,8 +22,8 @@ exports.findAllUser = async () => {
     return user
 };
 
-exports.getUser = async (email) => {
-    const user = await userRepository.getUser(email);
-    if (!user) throw `[UserService] ${email} 유저 정보 없음`;
+exports.getUser = async (userId) => {
+    const user = await userRepository.getUser(userId);
+    if (!user) throw `[UserService] ${userId} 유저 정보 없음`;
     return user
 };

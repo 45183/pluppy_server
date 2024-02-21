@@ -18,9 +18,14 @@ const authRouter = require("./routes/authRoute");
 dotenv.config();
 passportConfig();
 
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true
+}
+
 const app = express();
+app.use(cors(corsOptions));
 app.set("port", process.env.PORT || 3000);
-app.use(cors());
 app.use(express.json());
 
 sequelize
