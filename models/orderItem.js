@@ -9,17 +9,30 @@ module.exports = class OrderItem extends Sequelize.Model {
                 primaryKey: true,
                 autoIncrement: true
             },
+            price: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            totalPrice: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
             amount: {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
-            price: {
-                type: Sequelize.INTEGER,
+            payment: {
+                type: Sequelize.STRING(255),
                 allowNull: false
+            },
+            orderStatus: {
+                type: Sequelize.ENUM,
+                values: ["결제완료", "배송중", "배송완료"],
+                defaultValue: "결제완료"
             }
             }, {
             sequelize,
-            timestamps: false,
+            timestamps: true,
             underscored: false,
             modelName: 'OrderItem',
             tableName: 'orderItem',
@@ -30,8 +43,8 @@ module.exports = class OrderItem extends Sequelize.Model {
     }
 
     static associate(db){
-        db.OrderItem.belongsTo(db.Order,  { foreignKey: 'orderId', targetKey: 'orderId' });
+        db.OrderItem.belongsTo(db.User,  { foreignKey: 'userId', targetKey: 'userId' });
         db.OrderItem.belongsTo(db.Product,  { foreignKey: 'productId', targetKey: 'productId' });
-        // db.OrderItem.belongsTo(db.OrderStatus,  { foreignKey: 'orderStatusId', targetKey: 'orderStatusId' });
+
     }
 }

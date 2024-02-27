@@ -27,9 +27,20 @@ module.exports = class User extends Sequelize.Model {
                 allowNull: true
             },
             userType: {
-                type: Sequelize.ENUM,
-                values: ["admin", "user"],
-                defaultValue: "user"
+                type: Sequelize.BOOLEAN,
+                allowNull: false
+            },
+            address1: {
+                type: Sequelize.STRING(255),
+                allowNull: true
+            },
+            address2: {
+                type: Sequelize.STRING(255),
+                allowNull: true
+            },
+            zipCode: {
+                type: Sequelize.INTEGER,
+                allowNull: true
             }
         }, {
             sequelize,
