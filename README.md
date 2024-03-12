@@ -1,3 +1,10 @@
+# Link
+<ul>
+ <li><a href="https://github.com/45183/pluppy_client">Frontend</a></li>
+ <li><a href="https://github.com/45183/pluppy_server">Backend</a></li>
+</ul>
+
+
 # Tech Stacks
  <br>
     <div style="margin: 0 auto; text-align: center;" align= "center">
